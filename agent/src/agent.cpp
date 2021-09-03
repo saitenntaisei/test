@@ -1,5 +1,12 @@
-#include "agent.hpp"
+#include "agent_node.hpp"
 
-void display(){
-    printf("agent.cpp");
+namespace aqua{
+
+    Agent::Agent(){
+
+    }
+
+    Agent::~Agent(){
+
+    }
 }
