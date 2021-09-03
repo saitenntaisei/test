@@ -13,5 +13,10 @@ namespace aqua{
     public:
         Agent();
         ~Agent();
+
+    
+
+    public:
+        float input_variable[6];
     };
 }
