@@ -17,7 +17,9 @@ int main(int argc, char** argv){
 namespace aqua{
     KF_node::KF_node(){
         kf_pub = nh.advertise<std_msgs::Int8MultiArray>("/status/est",100);
-        kf_motor_sub = nh.subscribe<std_msgs::Int8MultiArray>("/commnad/motor_power",100,&KF_node::return_motor_data,this);
+        kf_motor_sub = nh.subscribe<std_msgs::Int8MultiArray>("/command/motor_power",100,&KF_node::return_motor_data,this);
+
+        motor_power_data.data.resize(8);
     }
     KF_node::~KF_node(){
 
