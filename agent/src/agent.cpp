@@ -3,7 +3,7 @@
 namespace aqua{
 
     Agent::Agent(){
-
+        
     }
 
     Agent::~Agent(){
