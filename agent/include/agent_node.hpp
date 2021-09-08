@@ -20,6 +20,7 @@ namespace aqua{
         std_msgs::Int8MultiArray motor_power_data;
     
     public:
+        void generate_motor_power();
         void msg_pub();
 
     private:

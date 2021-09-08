@@ -9,6 +9,9 @@ int main(int argc, char** argv){
     ros::Rate looprate(10);
     while(ros::ok()){
 
+        agent.generate_motor_power();
+        agent.msg_pub();
+
         ros::spinOnce();
         looprate.sleep();
     }
@@ -29,12 +32,18 @@ namespace aqua{
 
     }
     void Agent_node::set_data(const std_msgs::Int8MultiArray::ConstPtr& data){
+        for(int i=0;i<6;i++){
+            motor_power_data.data[i] = i;
+        }
+    }
+
+    void Agent_node::generate_motor_power(){
 
     }
 
     void Agent_node::msg_pub(){
         motor_power_data.data[6] = 0x7E;
-        motor_power_data.data[6] = 0x7F;
+        motor_power_data.data[7] = 0x7F;
 
         agent_pub.publish(motor_power_data);
     }
