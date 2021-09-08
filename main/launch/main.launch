@@ -1,4 +1,5 @@
 <launch>
     <node pkg="agent" name="agent_node" type="agent_node"/>
+    <node pkg="kalman_filter" name="kalman_filter_node" type="kalman_filter_node"/>
     <!--<node pkg="serial_interface" name="serial_interface" type="serial_interface"/>-->
 </launch>

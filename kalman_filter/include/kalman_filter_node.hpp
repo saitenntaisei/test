@@ -15,6 +15,7 @@ namespace aqua{
         ros::Subscriber kf_motor_sub;
     
     private:
+        //agentから受け取る
         std_msgs::Int8MultiArray motor_power_data;
 
     public:

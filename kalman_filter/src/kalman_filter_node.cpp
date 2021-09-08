@@ -1,6 +1,16 @@
 #include "kalman_filter_node.hpp"
 
 int main(int argc, char** argv){
+
+    ros::init(argc,argv,"kalman_filter_node");
+    aqua::KF_node KF;
+
+    ros::Rate looprate(10);
+    while(ros::ok()){
+
+        ros::spinOnce();
+        looprate.sleep();
+    }
     return 0;
 }
 
@@ -18,6 +28,9 @@ namespace aqua{
     }
 
     void KF_node::return_motor_data(const std_msgs::Int8MultiArray::ConstPtr& data){
-
+        int num = data->data.size();
+        for(int i=0;i<num;i++){
+            motor_power_data.data[i] = data->data[i];
+        }
     }
 }
