@@ -1,5 +1,6 @@
 #pragma once
 
+#include <std_msgs/Int8MultiArray.h>
 #include "agent.hpp"
 
 namespace aqua{
