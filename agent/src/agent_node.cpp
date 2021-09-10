@@ -32,13 +32,13 @@ namespace aqua{
 
     }
     void Agent_node::set_data(const std_msgs::Int8MultiArray::ConstPtr& data){
-        for(int i=0;i<6;i++){
-            motor_power_data.data[i] = i;
-        }
+        
     }
 
     void Agent_node::generate_motor_power(){
-
+        for(int i=0;i<6;i++){
+            motor_power_data.data[i] = i;
+        }
     }
 
     void Agent_node::msg_pub(){
