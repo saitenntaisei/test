@@ -65,81 +65,83 @@ namespace /* 変数 */{
     float u1cos1, u1sin1, u2cos2, u2sin2, u3cos3, u3sin3;
 }
 
-inline void state_function(float q[6]){
-    u1cos1 = q[0]*cos(q[3]);
-    u1sin1 = q[0]*sin(q[3]);
-    u2cos2 = q[1]*cos(q[4]);
-    u2sin2 = q[1]*sin(q[4]);
-    u3cos3 = q[2]*cos(q[5]);
-    u3sin3 = q[2]*sin(q[5]);
+namespace clione_gradient_method{
+    inline void state_function(float q[6]){
+        u1cos1 = q[0]*cos(q[3]);
+        u1sin1 = q[0]*sin(q[3]);
+        u2cos2 = q[1]*cos(q[4]);
+        u2sin2 = q[1]*sin(q[4]);
+        u3cos3 = q[2]*cos(q[5]);
+        u3sin3 = q[2]*sin(q[5]);
 
-    f[0] = f1*(u1cos1-u2cos2);
-    f[1] = (-u1cos1-u2cos2)/2+u3cos3;
-    f[2] = -u1sin1-u2sin2-u3sin3;
-    f[3] = f4_1_1*u1cos1+f4_1_2*u2sin2+f4_2_1*u2cos2+f4_2_2*u2sin2+f4_3*u3cos3;
-    f[4] = f5_1_1*u1cos1+f5_1_2*u2sin2+f5_2_1*u2cos2+f5_2_2*u2sin2+f5_3*u3sin3;
-    f[5] = f6_1_1*u1cos1+f6_1_2*u2sin2+f6_2_1*u2cos2+f6_2_2*u2sin2+f6_3*u3cos3;
+        f[0] = f1*(u1cos1-u2cos2);
+        f[1] = (-u1cos1-u2cos2)/2+u3cos3;
+        f[2] = -u1sin1-u2sin2-u3sin3;
+        f[3] = f4_1_1*u1cos1+f4_1_2*u2sin2+f4_2_1*u2cos2+f4_2_2*u2sin2+f4_3*u3cos3;
+        f[4] = f5_1_1*u1cos1+f5_1_2*u2sin2+f5_2_1*u2cos2+f5_2_2*u2sin2+f5_3*u3sin3;
+        f[5] = f6_1_1*u1cos1+f6_1_2*u2sin2+f6_2_1*u2cos2+f6_2_2*u2sin2+f6_3*u3cos3;
 
-}
-
-inline void jacobian_matrix(float q[6]){
-    J[0][0] = j1_*cos(q[0]);
-    J[0][1] = -j1_*cos(q[1]);
-    J[0][2] = 0;
-    J[0][3] = -j1_*u1sin1;
-    J[0][4] = j1_*u2sin2;
-    J[0][5] = 0;
-    J[1][0] = -j2*cos(q[0]);
-    J[1][1] = -j2*cos(q[1]);
-    J[1][2] = cos(q[2])/M;
-    J[1][3] = j2*u1sin1;
-    J[1][4] = j2*u2sin2;
-    J[1][5] = -u3cos3/M;
-    J[2][0] = -sin(q[0])/M;
-    J[2][1] = -sin(q[1])/M;
-    J[2][2] = -sin(q[2])/M;
-    J[2][3] = -u1cos1/M;
-    J[2][4] = -u2cos2/M;
-    J[2][5] = -u3cos3/M;
-    J[3][0] = j4_1*cos(q[0])-j4_2*sin(q[0]);
-    J[3][1] = -j4_1*cos(q[1])+j4_2*sin(q[1]);
-    J[3][2] = j4_3*cos(q[2]);
-    J[3][3] = -j4_1*u1sin1+j4_2*u1cos1;
-    J[3][4] = j4_1*u2sin2+j4_2*u2cos2;
-    J[3][5] = -j4_3*u3sin3;
-    J[4][0] = j5_1*cos(q[0])+j5_2*sin(q[0]);
-    J[4][1] = -j5_1*cos(q[1])+j5_2*sin(q[1]);
-    J[4][2] = j5_3*sin(q[2]);
-    J[4][3] = -j5_1*u1sin1+j5_2*u1cos1;
-    J[4][4] = j5_2*u2sin2+j5_2*u2cos2;
-    J[4][5] = j5_3*u3cos3;
-    J[5][0] = -j6_1*cos(q[0]);
-    J[5][1] = -j6_1*cos(q[1]);
-    J[5][2] = j6_2*cos(q[2]);
-    J[5][3] = j6_1*u1sin1;
-    J[5][4] = j6_1*u2sin2;
-    J[5][5] = -j6_2*u3sin3;
-}
-
-inline void determining_input_value(float q[6], float u[6]){
-
-}
-
-inline void debug(float q[6]){
-    state_function(q);
-    jacobian_matrix(q);
-
-    printf("state_function >>\n");
-    for(int i=0;i<6;i++){
-        printf("%f\n",f[i]);
     }
-    printf("\n");
 
-    printf("jacobian_matrix >>\n");
-    for(int i=0;i<6;i++){
-        for(int j=0;j<6;j++){
-            printf("%f ",J[i][j]);
+    inline void jacobian_matrix(float q[6]){
+        J[0][0] = j1_*cos(q[0]);
+        J[0][1] = -j1_*cos(q[1]);
+        J[0][2] = 0;
+        J[0][3] = -j1_*u1sin1;
+        J[0][4] = j1_*u2sin2;
+        J[0][5] = 0;
+        J[1][0] = -j2*cos(q[0]);
+        J[1][1] = -j2*cos(q[1]);
+        J[1][2] = cos(q[2])/M;
+        J[1][3] = j2*u1sin1;
+        J[1][4] = j2*u2sin2;
+        J[1][5] = -u3cos3/M;
+        J[2][0] = -sin(q[0])/M;
+        J[2][1] = -sin(q[1])/M;
+        J[2][2] = -sin(q[2])/M;
+        J[2][3] = -u1cos1/M;
+        J[2][4] = -u2cos2/M;
+        J[2][5] = -u3cos3/M;
+        J[3][0] = j4_1*cos(q[0])-j4_2*sin(q[0]);
+        J[3][1] = -j4_1*cos(q[1])+j4_2*sin(q[1]);
+        J[3][2] = j4_3*cos(q[2]);
+        J[3][3] = -j4_1*u1sin1+j4_2*u1cos1;
+        J[3][4] = j4_1*u2sin2+j4_2*u2cos2;
+        J[3][5] = -j4_3*u3sin3;
+        J[4][0] = j5_1*cos(q[0])+j5_2*sin(q[0]);
+        J[4][1] = -j5_1*cos(q[1])+j5_2*sin(q[1]);
+        J[4][2] = j5_3*sin(q[2]);
+        J[4][3] = -j5_1*u1sin1+j5_2*u1cos1;
+        J[4][4] = j5_2*u2sin2+j5_2*u2cos2;
+        J[4][5] = j5_3*u3cos3;
+        J[5][0] = -j6_1*cos(q[0]);
+        J[5][1] = -j6_1*cos(q[1]);
+        J[5][2] = j6_2*cos(q[2]);
+        J[5][3] = j6_1*u1sin1;
+        J[5][4] = j6_1*u2sin2;
+        J[5][5] = -j6_2*u3sin3;
+    }
+
+    inline void determining_input_value(float q[6], float u[6]){
+
+    }
+
+    inline void debug(float q[6]){
+        state_function(q);
+        jacobian_matrix(q);
+
+        printf("state_function >>\n");
+        for(int i=0;i<6;i++){
+            printf("%f\n",f[i]);
         }
         printf("\n");
+
+        printf("jacobian_matrix >>\n");
+        for(int i=0;i<6;i++){
+            for(int j=0;j<6;j++){
+                printf("%f ",J[i][j]);
+            }
+            printf("\n");
+        }
     }
 }

@@ -5,6 +5,8 @@ int main(int argc, char** argv){
     ros::init(argc,argv,"agent_node");
 
     aqua::Agent_node agent;
+    
+    agent.debug_determining_input_value();
 
     ros::Rate looprate(10);
     while(ros::ok()){

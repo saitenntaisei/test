@@ -2,7 +2,6 @@
 
 #include <std_msgs/Int8MultiArray.h>
 #include "agent.hpp"
-#include "determining_input_value.hpp"
 
 namespace aqua{
 
@@ -24,7 +23,6 @@ namespace aqua{
         void generate_motor_power();
         void msg_pub();
 
-        void debug_determining_input_value();
 
     private:
         void set_data(const std_msgs::Int8MultiArray::ConstPtr& data);
