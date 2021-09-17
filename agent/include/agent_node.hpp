@@ -23,6 +23,7 @@ namespace aqua{
         void generate_motor_power();
         void msg_pub();
 
+
     private:
         void set_data(const std_msgs::Int8MultiArray::ConstPtr& data);
     };
