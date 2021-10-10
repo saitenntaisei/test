@@ -2,7 +2,6 @@
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "signal_publisher");
-    ros::NodeHandle nh;
 
     aqua::Signal_Publisher signal_publisher;
 
