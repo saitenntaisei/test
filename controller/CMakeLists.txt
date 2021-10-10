@@ -137,6 +137,8 @@ include_directories(
 # add_executable(${PROJECT_NAME}_node src/controller_node.cpp)
 add_executable(img_publisher src/img_publisher.cpp)
 add_executable(img_subscriber src/img_subscriber.cpp)
+add_executable(signal_publisher src/signal_publisher.cpp)
+add_executable(signal_subscriber src/signal_subscriber.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -154,6 +156,8 @@ add_executable(img_subscriber src/img_subscriber.cpp)
 
 target_link_libraries(img_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(img_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(signal_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 #############
 ## Install ##

@@ -8,7 +8,7 @@ int main(int argc,char **argv){
     ros::Rate loop_rate(10);
     while(ros::ok()){
         ros::spinOnce();
-        ros::sleep();
+        loop_rate.sleep();
     }
 }
 
@@ -18,18 +18,20 @@ namespace aqua{
         motor_data_pub = nh.advertise<std_msgs::Int8MultiArray>("/command/motor_power",10);
 
         motor_data.data.resize(8);
-        memset(motor_data.data,0,sizeof(motor_data.data));
+        for(int i=0;i<8;i++)motor_data.data[i] = 0;
     }
 
     Signal_Subscriber::~Signal_Subscriber(){
 
     }
 
-    void Signal_Subscriber::signal_callback(const geometry_msgs::TwistPtr &msg){
-        int num = msg->data.size();
-        for(int i=0;i<num;i++){
-            xd[i] = msg->data[i];
-        }
+    void Signal_Subscriber::signal_callback(const geometry_msgs::Twist::ConstPtr& msg){
+        xd[0] = msg->linear.x;
+        xd[1] = msg->linear.y;
+        xd[2] = msg->linear.z;
+        xd[3] = msg->angular.x;
+        xd[4] = msg->angular.y;
+        xd[5] = msg->angular.z;
     }
 
     void Signal_Subscriber::send_msg(){

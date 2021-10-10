@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Int8MultiArray.h>
-#include "determining_input_value,hpp"
+#include "determining_input_value.hpp"
 
 namespace aqua{
     class Signal_Subscriber{
@@ -14,7 +14,7 @@ namespace aqua{
 
     private:
         ros::NodeHandle nh;
-        void signal_callback(const geometry_msgs::TwistPtr &msg);
+        void signal_callback(const geometry_msgs::Twist::ConstPtr &msg);
 
     private:
         ros::Subscriber signal_sub;
