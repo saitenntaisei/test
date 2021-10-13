@@ -6,4 +6,7 @@
     <node pkg="controller" name="img_subscriber" type="img_subscriber"/>
     <node pkg="controller" name="signal_publisher" type="signal_publisher"/>
     <node pkg="controller" name="signal_subscriber" type="signal_subscriber"/>
+    <node pkg="serial_interface" type="serial_interface" name="serial_interface">
+        <param name="port_name" value="/dev/ttyACM0" />
+    </node>
 </launch>
