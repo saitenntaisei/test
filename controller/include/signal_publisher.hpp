@@ -8,6 +8,7 @@ namespace aqua{
     public:
         Signal_Publisher();
         ~Signal_Publisher();
+        void convert_joy2twist();
         void send_msg();
     
     private:
@@ -18,5 +19,6 @@ namespace aqua{
         ros::Subscriber joy_sub;
         ros::Publisher signal_pub;
         geometry_msgs::Twist controller_msg;
+        sensor_msgs::Joy joy_data;
     };
 }
