@@ -20,7 +20,7 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(100);
     while(ros::ok()){
         camera.read(img);
         sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(),"bgr8",img).toImageMsg();
