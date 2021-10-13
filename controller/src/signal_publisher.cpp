@@ -25,7 +25,7 @@ namespace aqua{
     }
 
     void Signal_Publisher::joy_callback(const sensor_msgs::Joy::ConstPtr &joy_msg){
-
+        ROS_ERROR("catch!%f",joy_msg->axes[0]);
     }
 
     void Signal_Publisher::send_msg(){
