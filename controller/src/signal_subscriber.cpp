@@ -14,7 +14,7 @@ int main(int argc,char **argv){
 
 namespace aqua{
     Signal_Subscriber::Signal_Subscriber(){
-        signal_sub = nh.subscribe("/command/motor_power",10,&Signal_Subscriber::signal_callback,this);
+        signal_sub = nh.subscribe("/command/robot_twist",10,&Signal_Subscriber::signal_callback,this);
         motor_data_pub = nh.advertise<std_msgs::Int8MultiArray>("/command/motor_power",10);
 
         motor_data.data.resize(8);
