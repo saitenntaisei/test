@@ -1,0 +1,6 @@
+# ros周り
+.bag
+.rosbag
+
+# コードエディタ用
+.vscode/
