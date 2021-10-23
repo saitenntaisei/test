@@ -8,10 +8,13 @@ project(controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  cv_bridge
   image_transport
+  roscpp
+  cv_bridge
+  sensor_msgs
+  nodelet
+  camera_info_manager
+  roslint
 )
 
 ## System dependencies are found with CMake's conventions
@@ -104,10 +107,10 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES controller
-#  CATKIN_DEPENDS roscpp std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES controller
+  CATKIN_DEPENDS roscpp std_msgs
+  DEPENDS OpenCV
 )
 
 ###########
@@ -125,6 +128,7 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/controller.cpp
 # )
+add_library(cv_camera src/capture.cpp src/driver.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -154,10 +158,14 @@ add_executable(signal_subscriber src/signal_subscriber.cpp)
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(img_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(img_publisher ${catkin_LIBRARIES} cv_camera)
 target_link_libraries(img_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(signal_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(cv_camera
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+)
 
 #############
 ## Install ##
