@@ -14,9 +14,19 @@ int main(int argc, char* argv[]) {
     kurione::Communication communication(&serial);
     kurione::NucleoDriver nucleo(&communication, motors);
 
+    // 最初に初期化命令
+    nucleo.communication_ptr->send_command_dat = kurione::Command::SIGNAL_LAND_TO_MAIN;  // 入力命令
+    for(int i=0; i<nucleo.MOTOR_NUM; i++){
+        nucleo.communication_ptr->send_num_dat.push(motors[i].initialize());
+    }
+    for (int i = 0; i<3; i++){  // 3回空命令を送信
+        nucleo.communication_ptr->encode();
+        nucleo.communication_ptr->sendDat();
+        ros::Duration(0.400).sleep(); // sleep for 400ms
+    }
+
     ros::Rate loop_rate(100);
     int t = 0;
-
     while(ros::ok()) {
         
         nucleo.communication_ptr->receive();
@@ -53,7 +63,7 @@ namespace kurione {
         communication_ptr = cp;
         motors_ptr = mp;
 
-        info_sub_ = nh_.subscribe<std_msgs::Int8MultiArray>("/serial_data/to_maindriver", 100, &NucleoDriver::updateInfo, this);
+        info_sub_ = nh_.subscribe<std_msgs::Int8MultiArray>("/command/motor_power", 100, &NucleoDriver::updateInfo, this);
         info_pub_ = nh_.advertise<std_msgs::Int8MultiArray>("/serial_data/from_maindriver", 100);
 
         std::string port_name_;
@@ -130,7 +140,7 @@ namespace kurione {
 
     void NucleoDriver::updateInfo(const std_msgs::Int8MultiArray::ConstPtr& info_ptr) { // topic受信
         int num = info_ptr->data.size();
-        if (num!=MOTOR_NUM){
+        if (num!=MOTOR_NUM+2){
             ROS_ERROR("mismatch the input size = %d", num);
         }
         for(int i=0; i<num; i++){
