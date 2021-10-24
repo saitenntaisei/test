@@ -1,5 +1,5 @@
-#ifndef _UWRAI19_SERIAL_INTERFACE_
-#define _UWRAI19_SERIAL_INTERFACE_
+#ifndef _KURIONE_SERIAL_INTERFACE_
+#define _KURIONE_SERIAL_INTERFACE_
 
 #include<string>
 #include<cmath>
@@ -16,40 +16,52 @@
 #include<std_msgs/Int8MultiArray.h>
 
 
-#include "packet.hpp"
+#include"packet.hpp"
 
-namespace uwrai19 {
+namespace kurione {
     class SerialInterface {
     private:
         ros::NodeHandle nh_;
         // node handle
-        ros::Subscriber motor_power_sub_;
-        //subscribers
 
         std::string port_name_;
 
         int fd_;
+        int read_req_size = 2;      // 未使用
+        int read_size;
         
         struct termios tio_;
         struct termios tio_backup_;
 
-        struct PacketData data_;
+        //struct PacketData data_;
 
-        unsigned char packet_[8];
-        //a packet sent in USB_UART
+        //unsigned char packet_[8];   // 未使用
+        // packets sent in USB_UART
+        //unsigned char r_packet_[8]; // 未使用
+        // packets read in USB_UART
+        
 
-        void initializePort();
-        void initializeData();
-        void generatePacket();
+        
+        //void initializeData();  // 未使用
+        //void generatePacket();  // 未使用
 
     public:
         SerialInterface();
         ~SerialInterface();
+        void initializePort();
+        //void sendPacket();  // 未使用
+        //void readPacket();  // 未使用
 
-        void sendPacket();
+        void setPortName(std::string);
 
-        void updateMotorPower(const std_msgs::Int8MultiArray::ConstPtr&);
-        
+        // 以下nucleo代用
+        void putc(unsigned char);   //１文字送信
+        bool readable();            // 読み取り可？
+        unsigned char getc();       // １文字受信
+
+        //void updateDataToUSB(const std_msgs::Int8MultiArray::ConstPtr&);    // 多分未使用
+        // when subscribe data from ROS node, update data sent to USB module.
+
     };
 }
 

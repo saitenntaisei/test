@@ -37,6 +37,8 @@ include_directories(
 ### node ###
 
 add_executable(${PROJECT_NAME} 
+  src/nucleo_driver.cpp
+  src/communication.cpp
   src/serial_interface.cpp
 )
 

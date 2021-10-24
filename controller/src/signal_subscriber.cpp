@@ -32,6 +32,8 @@ namespace aqua{
         xd[3] = msg->angular.x;
         xd[4] = msg->angular.y;
         xd[5] = msg->angular.z;
+
+        cal_motor_input_val();  // motor_powerがPublishされていなかったので暫定的に追加
     }
 
     void Signal_Subscriber::send_msg(){
