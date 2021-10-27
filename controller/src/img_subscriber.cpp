@@ -26,7 +26,7 @@ int main(int argc, char **argv){
     ros::NodeHandle nh;
 
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber image_sub = it.subscribe("image",10,imageCallback);
+    image_transport::Subscriber image_sub = it.subscribe("/img_publisher/image_raw",10,imageCallback);
     ros::spin();
     return 0;
 }

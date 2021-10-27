@@ -8,16 +8,21 @@ project(controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  cv_bridge
   image_transport
+  roscpp
+  cv_bridge
+  sensor_msgs
+  nodelet
+  camera_info_manager
+  roslint
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system thread)
 
+roslint_cpp()
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -104,10 +109,10 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES controller
-#  CATKIN_DEPENDS roscpp std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES controller
+  CATKIN_DEPENDS image_transport roscpp cv_bridge sensor_msgs nodelet camera_info_manager std_msgs
+  DEPENDS OpenCV
 )
 
 ###########
@@ -119,12 +124,15 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/controller.cpp
 # )
+add_library(cv_camera src/capture.cpp src/driver.cpp)
+add_library(cv_camera_nodelet src/cv_camera_nodelet.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -148,13 +156,25 @@ add_executable(signal_subscriber src/signal_subscriber.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(img_publisher cv_camera)
+add_dependencies(cv_camera_nodelet cv_camera)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
 
-target_link_libraries(img_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(cv_camera
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+)
+
+target_link_libraries(cv_camera_nodelet
+  ${catkin_LIBRARIES}
+  cv_camera
+)
+
+target_link_libraries(img_publisher ${catkin_LIBRARIES} cv_camera)
 target_link_libraries(img_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(signal_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
@@ -186,6 +206,15 @@ target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 # )
+install(TARGETS cv_camera cv_camera_nodelet img_publisher
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  )
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  )
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/

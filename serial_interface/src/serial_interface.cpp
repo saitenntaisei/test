@@ -44,7 +44,7 @@ namespace kurione {
         std::memset(&tio_, 0, sizeof(tio_));
         tio_.c_cc[VMIN]  = 0;
         tio_.c_cc[VTIME] = 1;
-        tio_.c_cflag     = B115200 | CS8 | CLOCAL;
+        tio_.c_cflag     = B115200 | CS8 | CLOCAL;  // 9600bps
         tio_.c_iflag     = IGNBRK | IGNPAR;
 
         // clears flush of the port
@@ -125,6 +125,13 @@ namespace kurione {
         }
     }
 */
+    int SerialInterface::freshReadBuffer() {
+        int available_size = 0;
+        ioctl(fd_, FIONREAD, &available_size);
+        unsigned char* r_packet_ptr;
+        return read(fd_, r_packet_ptr, available_size);
+    }
+
     void SerialInterface::setPortName(std::string name){
         port_name_ = name;
         return;
@@ -133,13 +140,10 @@ namespace kurione {
     void SerialInterface::putc(unsigned char dat) {
         // sends packets
         int status = write(fd_, &dat, 1);
-
         if(status < 0) {
             ROS_ERROR("Failed to send data (%s)", std::strerror(errno));
-            
             std::exit(-1);
         }
-
         return;
     }
 
@@ -149,13 +153,21 @@ namespace kurione {
         return available_size>0;
     }
 
+    int SerialInterface::readable_size() {
+        int available_size = 0;
+        ioctl(fd_, FIONREAD, &available_size);
+        return available_size;
+    }
+
     unsigned char SerialInterface::getc() {
         unsigned char ret = 0;
         int available_size = 0;
         ioctl(fd_, FIONREAD, &available_size);
         if (available_size>0){
-            read(fd_, &ret, 1);
+            int read_size = read(fd_, &ret, 1);
+            ROS_INFO("read_size : %d", read_size);
         }
+        return ret;
     }
 /*
     void SerialInterface::updateDataToUSB(const std_msgs::Int8MultiArray::ConstPtr& motor_power_ptr){

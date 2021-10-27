@@ -24,7 +24,9 @@ int main(int argc, char* argv[]) {
         nucleo.communication_ptr->sendDat();
         ros::Duration(0.400).sleep(); // sleep for 400ms
     }
-
+    int fresh_size = nucleo.communication_ptr->serial_ptr->freshReadBuffer();
+    ROS_INFO("erase %d bytes", fresh_size);
+    
     ros::Rate loop_rate(100);
     int t = 0;
     while(ros::ok()) {
@@ -97,7 +99,7 @@ namespace kurione {
                     power_supply = communication_ptr->receive_num_dat.front();
                     communication_ptr->receive_num_dat.pop();
                     // pc.printf("BATT:%2.1f V,%2.1f A, POWER:%2d\n", (float)(voltage_int)/10.0f, (float)(current_int)/10.0f, power_supply);
-                    ROS_INFO("BATT:%2.1f V,%2.1f A, POWER:%2d\n", (float)(voltage_int)/10.0f, (float)(current_int)/10.0f, power_supply);
+                    //ROS_INFO("BATT:%2.1f V,%2.1f A, POWER:%2d\n", (float)(voltage_int)/10.0f, (float)(current_int)/10.0f, power_supply);
                     break;
                 default:
                     break;

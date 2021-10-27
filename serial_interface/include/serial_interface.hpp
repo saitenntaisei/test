@@ -55,8 +55,10 @@ namespace kurione {
         void setPortName(std::string);
 
         // 以下nucleo代用
+        int freshReadBuffer();
         void putc(unsigned char);   //１文字送信
         bool readable();            // 読み取り可？
+        int readable_size();
         unsigned char getc();       // １文字受信
 
         //void updateDataToUSB(const std_msgs::Int8MultiArray::ConstPtr&);    // 多分未使用

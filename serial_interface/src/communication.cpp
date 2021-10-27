@@ -26,6 +26,7 @@ namespace kurione {
     void Communication::receive(void){  // データ受け取り関数
         while(serial_ptr->readable()) {
             unsigned char c = serial_ptr->getc();
+            ROS_INFO("readable : %d, read : %d", serial_ptr->readable_size(), c);
             if (status == STATUS_RECEIVING) { // 受信中
                 if ( c==Command::END ){   // 終了コマンドなら，データ読み取り要求
                 //printf("size:%d\n",receive_dat.size());
