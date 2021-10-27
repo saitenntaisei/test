@@ -19,7 +19,7 @@ namespace kurione {
         //initializeData();
 
         for(int i = 0; i < 3; i++) {
-            //sendPacket();
+            putc(0xFF);
         }
 
         // resets terminal-io status
@@ -30,7 +30,8 @@ namespace kurione {
     }
     
     void SerialInterface::initializePort() {
-        fd_ = open(port_name_.data(), O_WRONLY);
+        //fd_ = open(port_name_.data(), O_WRONLY);
+        fd_ = open(port_name_.data(), O_RDWR);
 
         if(fd_ < 0){
             ROS_ERROR("failed to open the port(%s): (%s)", port_name_.data(), std::strerror(errno));
@@ -44,7 +45,8 @@ namespace kurione {
         std::memset(&tio_, 0, sizeof(tio_));
         tio_.c_cc[VMIN]  = 0;
         tio_.c_cc[VTIME] = 1;
-        tio_.c_cflag     = B115200 | CS8 | CLOCAL;  // 9600bps
+        //tio_.c_cflag     = B115200 | CS8 | CLOCAL | CREAD;  // 9600bps
+        tio_.c_cflag     = B115200 | CS8 | CREAD;
         tio_.c_iflag     = IGNBRK | IGNPAR;
 
         // clears flush of the port
@@ -128,8 +130,11 @@ namespace kurione {
     int SerialInterface::freshReadBuffer() {
         int available_size = 0;
         ioctl(fd_, FIONREAD, &available_size);
+        ROS_INFO("available : %d", available_size);
         unsigned char* r_packet_ptr;
+        //unsigned char r_packet_[8];
         return read(fd_, r_packet_ptr, available_size);
+        //return read(fd_, r_packet_, 8);
     }
 
     void SerialInterface::setPortName(std::string name){
@@ -165,7 +170,7 @@ namespace kurione {
         ioctl(fd_, FIONREAD, &available_size);
         if (available_size>0){
             int read_size = read(fd_, &ret, 1);
-            ROS_INFO("read_size : %d", read_size);
+            //ROS_INFO("read_size : %d, stat : %s", read_size, std::strerror(errno));
         }
         return ret;
     }

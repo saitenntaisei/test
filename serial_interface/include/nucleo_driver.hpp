@@ -37,6 +37,7 @@ namespace kurione {
                 setDutyInit(init);
             }
             int inputToDuty(int input){
+                input = 120;    // for debug
                 if((input<=input_mid+input_range)&&(input>=input_mid-input_range)){   // 
                     u = (int)(((double)(input-input_mid)/input_range)*duty_range*sign+duty_mid);
                 }else{
