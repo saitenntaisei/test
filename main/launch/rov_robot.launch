@@ -1,7 +1,9 @@
 <launch>
-    <node pkg="controller" name="img_publisher" type="img_publisher"/>
+    <node pkg="controller" name="img_publisher" type="img_publisher">
+        <param name="port_name" value="/dev/video0" />
+    </node>
     <node pkg="controller" name="signal_subscriber" type="signal_subscriber"/>
     <node pkg="serial_interface" type="serial_interface" name="nucleo_driver" output="screen">
-        <param name="port_name" value="/dev/video0" />
+        <param name="port_name" value="/dev/ttyACM0" />
     </node>
 </launch>
