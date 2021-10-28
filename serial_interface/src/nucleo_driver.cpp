@@ -1,5 +1,6 @@
 #include "nucleo_driver.hpp"
 
+
 // TODO : エラー解決
 // TODO : 入ってきた入力値をデューティーに変換
 // TODO : 返り電圧値を適切な型でパブリッシュ
@@ -42,7 +43,7 @@ int main(int argc, char* argv[]) {
                 for(int i=0; i<nucleo.MOTOR_NUM; i++){
                     nucleo.communication_ptr->send_num_dat.push(nucleo.u[i]);
                 }
-                ROS_INFO("u : %d,%d,%d,%d,%d,%d",nucleo.u[0],nucleo.u[1],nucleo.u[2],nucleo.u[3],nucleo.u[4],nucleo.u[5]);
+                ROS_INFO("power : %d, u : %d,%d,%d,%d,%d,%d",!nucleo.mode_command.is_power_off_mode, nucleo.u[0],nucleo.u[1],nucleo.u[2],nucleo.u[3],nucleo.u[4],nucleo.u[5]);
             }else{
                 nucleo.communication_ptr->send_command_dat = nucleo.operation_command; // 大事な命令を送信
                 nucleo.operation_command = 0;
@@ -66,6 +67,7 @@ namespace kurione {
         motors_ptr = mp;
 
         info_sub_ = nh_.subscribe<std_msgs::Int8MultiArray>("/command/motor_power", 100, &NucleoDriver::updateInfo, this);
+        command_sub_ = nh_.subscribe<kurione_msgs::ModeCommand>("/command/mode", 100, &NucleoDriver::updateModeCommand, this);
         info_pub_ = nh_.advertise<std_msgs::Int8MultiArray>("/serial_data/from_maindriver", 100);
 
         std::string port_name_;
@@ -123,15 +125,15 @@ namespace kurione {
         motors_ptr[2].setSign(1);
         /**** Servo *****/
         // migimae
-        motors_ptr[3].setInputConfigs(0,100);  // mid, range
+        motors_ptr[3].setInputConfigs(0,1500);  // mid, range
         motors_ptr[3].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[3].setSign(1);
         // hidarimae
-        motors_ptr[4].setInputConfigs(0,100);  // mid, range
+        motors_ptr[4].setInputConfigs(0,1500);  // mid, range
         motors_ptr[4].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[4].setSign(-1);
         // ushiro
-        motors_ptr[5].setInputConfigs(0,100);  // mid, range
+        motors_ptr[5].setInputConfigs(0,1500);  // mid, range
         motors_ptr[5].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[5].setSign(1);
 
@@ -150,8 +152,27 @@ namespace kurione {
         }
         return;
     }
+    
+    void NucleoDriver::updateModeCommand(const kurione_msgs::ModeCommand::ConstPtr& command_ptr) {
+        mode_command.is_motor_init_mode = command_ptr->is_motor_init_mode;
+        if (mode_command.is_power_off_mode != command_ptr->is_power_off_mode) {
+            if (mode_command.is_power_off_mode){
+                operation_command = Command::POWER_SUPPLY_STOP;
+            }else{
+                operation_command = Command::POWER_SUPPLY_START;
+            }
+        }
+        mode_command.is_power_off_mode = command_ptr->is_power_off_mode;
+        return;
+    }
 
     void NucleoDriver::calcMotorsDuty() {   // 入力値からデューティーを計算
+        if (mode_command.is_motor_init_mode) {
+            for (int i = 0; i<MOTOR_NUM; i++){
+                u[i] = motors_ptr[i].initialize();
+            }
+            return;
+        }
         for(int i=0; i<MOTOR_NUM; i++){
             u[i] = motors_ptr[i].inputToDuty(data_.info[i]);
         }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(controller)
+project(kurione_msgs)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,22 +8,15 @@ project(controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  image_transport
   roscpp
-  cv_bridge
-  sensor_msgs
-  nodelet
-  camera_info_manager
-  roslint
-  kurione_msgs
+  std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-find_package(OpenCV REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system thread)
 
-roslint_cpp()
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -47,18 +40,17 @@ roslint_cpp()
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
-##     catkin_package(CATKIN_DEPENDS ...)
+
 ##   * uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   ModeCommand.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -75,10 +67,14 @@ roslint_cpp()
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
+
+ catkin_package(
+  CATKIN_DEPENDS roscpp std_msgs message_runtime
+  )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -110,10 +106,10 @@ roslint_cpp()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES controller
-  CATKIN_DEPENDS image_transport roscpp cv_bridge sensor_msgs nodelet camera_info_manager std_msgs
-  DEPENDS OpenCV
+#  INCLUDE_DIRS include
+#  LIBRARIES kurione_msgs
+#  CATKIN_DEPENDS roscpp std_msgs
+#  DEPENDS system_lib
 )
 
 ###########
@@ -123,17 +119,14 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+# include
   ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/controller.cpp
+#   src/${PROJECT_NAME}/kurione_msgs.cpp
 # )
-add_library(cv_camera src/capture.cpp src/driver.cpp)
-add_library(cv_camera_nodelet src/cv_camera_nodelet.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -143,11 +136,8 @@ add_library(cv_camera_nodelet src/cv_camera_nodelet.cpp)
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/controller_node.cpp)
-add_executable(img_publisher src/img_publisher.cpp)
-add_executable(img_subscriber src/img_subscriber.cpp)
-add_executable(signal_publisher src/signal_publisher.cpp)
-add_executable(signal_subscriber src/signal_subscriber.cpp)
+# add_executable(${PROJECT_NAME}_node src/kurione_msgs_node.cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -157,28 +147,11 @@ add_executable(signal_subscriber src/signal_subscriber.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(img_publisher cv_camera ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(cv_camera_nodelet cv_camera)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
-target_link_libraries(cv_camera
-  ${catkin_LIBRARIES}
-  ${OpenCV_LIBS}
-)
-
-target_link_libraries(cv_camera_nodelet
-  ${catkin_LIBRARIES}
-  cv_camera
-)
-
-target_link_libraries(img_publisher ${catkin_LIBRARIES} cv_camera)
-target_link_libraries(img_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(signal_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 #############
 ## Install ##
@@ -207,15 +180,6 @@ target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 # )
-install(TARGETS cv_camera cv_camera_nodelet img_publisher
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-  )
-
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  )
 
 ## Mark cpp header files for installation
 # install(DIRECTORY include/${PROJECT_NAME}/
@@ -236,7 +200,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_controller.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_kurione_msgs.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
