@@ -3,6 +3,7 @@
 
 #include "communication.hpp"
 #include "packet.hpp"
+#include <kurione_msgs/ModeCommand.h>
 
 namespace kurione {
 
@@ -37,7 +38,6 @@ namespace kurione {
                 setDutyInit(init);
             }
             int inputToDuty(int input){
-                input = 120;    // for debug
                 if((input<=input_mid+input_range)&&(input>=input_mid-input_range)){   // 
                     u = (int)(((double)(input-input_mid)/input_range)*duty_range*sign+duty_mid);
                 }else{
@@ -56,6 +56,7 @@ namespace kurione {
             ros::NodeHandle nh_;
             // node handle
             ros::Subscriber info_sub_;
+            ros::Subscriber command_sub_;
             // Subscribers
             ros::Publisher info_pub_;
             // Publishers
@@ -71,7 +72,10 @@ namespace kurione {
             Communication* communication_ptr;
             NucleoDriver(Communication*, Motor*);
             ~NucleoDriver();
+            kurione_msgs::ModeCommand mode_command;
+
             void updateInfo(const std_msgs::Int8MultiArray::ConstPtr&);
+            void updateModeCommand(const kurione_msgs::ModeCommand::ConstPtr&);
             void publishData();
             void calcMotorsDuty();
             void updateCommunication(void);

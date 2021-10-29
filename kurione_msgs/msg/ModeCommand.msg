@@ -1,0 +1,2 @@
+bool is_motor_init_mode
+bool is_power_off_mode
