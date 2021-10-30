@@ -20,7 +20,6 @@ namespace aqua{
         ros::Subscriber signal_sub;
         ros::Publisher motor_data_pub;
         std_msgs::Int8MultiArray motor_data;
-        
         float u[6];
         float xd[6];
     };
