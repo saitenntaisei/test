@@ -58,9 +58,10 @@
   <depend>nodelet</depend>
   <depend>camera_info_manager</depend>
   <build_depend>kurione_msgs</build_depend>
+  <build_depend>roslint</build_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->
-
+    <nodelet plugin="${prefix}/cv_camera_nodelets.xml"/>
   </export>
 </package>
