@@ -12,7 +12,7 @@ int main(int argc, char **argv){
     image_transport::Publisher img_pub = it.advertise("image",10);
     cv::Mat img;
 
-    int camera_id = 0;
+    int camera_id = 2;
     double fps = 15.0;
     double width = 1280.0;
     double height = 960.0;
@@ -26,6 +26,7 @@ int main(int argc, char **argv){
         ROS_ERROR("camera set fps error");
         return -1;
     }
+    ROS_INFO("width");
     /*
     if (!camera.set(cv::CAP_PROP_FRAME_WIDTH, width)){
         ROS_ERROR("camera set width error");
