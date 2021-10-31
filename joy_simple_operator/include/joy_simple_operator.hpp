@@ -26,15 +26,37 @@ namespace aqua{
             weight_each[0] = w1; weight_each[1] = w2; weight_each[2] = w3;
             weight_each[3] = w4; weight_each[4] = w5; weight_each[5] = w6;
         }
-        void sumPower(std::vector<int>* mpower_ptr) {
-            if (mpower_ptr == nullptr) {
-                ROS_ERROR("Null Pointer :sumPower");
-                return;
-            }
+        void sumPower(std::vector<int>& mpower) {
+            //if (mpower_ptr == nullptr) {
+            //    ROS_ERROR("Null Pointer :sumPower");
+            //   return;
+            //}
             for (int i=0; i<MOTOR_N; i++){
-                (&mpower_ptr)[i]+=my_mpower[i];
+                //ROS_INFO("moto : %d, tsugi : %d", mpower[i], my_mpower[i]);   // ここ２回で死ぬ
+                mpower[i]+=my_mpower[i];   
             }
         }
+        void calcMotorPowerAnalog(double input) {
+            std::vector<int> _mpower;
+            _mpower.resize(MOTOR_N);
+            for (int i = 0; i<MOTOR_N; i++) {
+                _mpower[i] = (int)(weight_all*weight_each[i]*input); 
+            }
+            my_mpower = _mpower;
+            //ROS_INFO("in:%f,%d,%d,%d",input, my_mpower[0], my_mpower[1], my_mpower[2]);
+            return ;
+        }
+        void calcMotorPowerDigital(int input) {
+            std::vector<int> _mpower;
+            _mpower.resize(MOTOR_N);
+            for (int i = 0; i<MOTOR_N; i++) {
+                _mpower[i] = (int)(weight_all*weight_each[i]*input); 
+            }
+            my_mpower = _mpower;
+            //ROS_INFO("in:%d,%d,%d,%d",input, my_mpower[3], my_mpower[4], my_mpower[5]);
+            return ;
+        }
+        /*
         std::vector<int> calcMotorPowerAnalog(double input) {
             std::vector<int> _mpower;
             _mpower.resize(MOTOR_N);
@@ -52,7 +74,7 @@ namespace aqua{
             }
             my_mpower = _mpower;
             return _mpower;
-        }
+        }*/
     };
 
     class Joy_Simple_Operator{
@@ -63,8 +85,8 @@ namespace aqua{
         void convert_joy2mpower();
         void convert_joy2mode_command();
         void send_msg();
-        void zeromize(std::vector<int>*, int);
-        int maxAbs(std::vector<int>*, int);
+        void zeromize(std::vector<int>&, int);
+        int maxAbs(std::vector<int>&, int);
         int connection_matrix[6][6]={
             {1, 0, 0, 0, 0, 0,},
             {0, -1, 0, 0, 0, 0,},

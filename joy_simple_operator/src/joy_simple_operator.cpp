@@ -43,12 +43,12 @@ namespace aqua{
 
     }
 
-    //void Joy_Simple_Operator::joy_callback(const sensor_msgs::Joy::ConstPtr &joy_msg){ 
-    void Joy_Simple_Operator::joy_callback(const sensor_msgs::Joy& joy_msg){
-        //if (joy_msg == nullptr) {
-        //    ROS_ERROR("Null Pointer :joy_callback");
-        //    return;
-        //}
+    void Joy_Simple_Operator::joy_callback(const sensor_msgs::Joy::ConstPtr &joy_msg){ 
+    //void Joy_Simple_Operator::joy_callback(const sensor_msgs::Joy& joy_msg){
+        if (joy_msg == nullptr) {
+            ROS_ERROR("Null Pointer :joy_callback");
+            return;
+        }
         /*
         int num_axes = joy_msg->axes.size();
         int num_buttons = joy_msg->buttons.size();
@@ -57,8 +57,8 @@ namespace aqua{
         for(int i=0;i<num_buttons;i++)joy_data.buttons[i] = joy_msg->buttons[i];
         */
         //joy_data_ptr = joy_msg;
-        //joy_data.axes = joy_msg->axes;
-        //joy_data.buttons = joy_msg->buttons;
+        joy_data.axes = joy_msg->axes;
+        joy_data.buttons = joy_msg->buttons;
     }
 
     void Joy_Simple_Operator::convert_joy2mode_command(){
@@ -81,37 +81,32 @@ namespace aqua{
     }
 
     void Joy_Simple_Operator::convert_joy2mpower(){
-        zeromize(&_mpower,_mpower.size());
+        zeromize(_mpower,_mpower.size());
+        //joy_data.buttons[6]=1;
+        //joy_data.axes[1] = 1;
         if(joy_data.buttons[6]==1){
-            
-
-            heave_linz.calcMotorPowerDigital(joy_data.buttons[5]-joy_data.buttons[4]);
-            //ROS_INFO("button : %d", joy_data.buttons[5]-joy_data.buttons[4]);
-
-            heave_linz.sumPower(&_mpower);
-            //ROS_INFO("ushiro");
-
-            surge_linx.calcMotorPowerAnalog(joy_data.axes[1]);           
-            surge_linx.sumPower(&_mpower);
+            //ROS_INFO("div");
+            surge_linx.calcMotorPowerAnalog(joy_data.axes[1]);      
+            surge_linx.sumPower(_mpower);
             sway_liny.calcMotorPowerAnalog(joy_data.axes[0]);
-            sway_liny.sumPower(&_mpower);
-            
-            pitch_roty.calcMotorPowerAnalog(joy_data.axes[4]);
-            pitch_roty.sumPower(&_mpower);
-          
-            yaw_rotz.calcMotorPowerAnalog(joy_data.axes[3]);
-            yaw_rotz.sumPower(&_mpower);
+            sway_liny.sumPower(_mpower);
+            heave_linz.calcMotorPowerDigital(joy_data.buttons[5]-joy_data.buttons[4]);
+            heave_linz.sumPower(_mpower);
+            pitch_roty.calcMotorPowerAnalog(joy_data.axes[3]);
+            pitch_roty.sumPower(_mpower);
+            yaw_rotz.calcMotorPowerAnalog(joy_data.axes[2]);
+            yaw_rotz.sumPower(_mpower);
             set_form.calcMotorPowerDigital(is_drone_mode);
-            set_form.sumPower(&_mpower);
-
-            int _max = maxAbs(&_mpower, 3); // BLDCの入力で100超えてないか？
+            set_form.sumPower(_mpower);
+            //ROS_INFO("%d, %d, %d, %d, %d, %d", _mpower[0], _mpower[1], _mpower[2], _mpower[3], _mpower[4], _mpower[5]);
+            int _max = maxAbs(_mpower, 3); // BLDCの入力で100超えてないか？
             if (_max<100){
                 _max = 100;
             }
             for (int i = 0; i<_mpower.size(); i++){
                 motor_data.data[i] = 0;
                 for (int j = 0; j<3; j++){
-                    motor_data.data[i] += (int)((double)connection_matrix[i][j]*_mpower[j]/_max);
+                    motor_data.data[i] += (int)((double)connection_matrix[i][j]*_mpower[j]*100/_max);
                 }
                 for (int j = 3; j<6; j++){
                     motor_data.data[i] += connection_matrix[i][j]*_mpower[j];
@@ -119,9 +114,10 @@ namespace aqua{
             }
         }else{
             for (int i = 0; i<_mpower.size(); i++){
-                motor_data.data[i] = 0;
+                motor_data.data[i] = 120;
             }
         }
+        //ROS_INFO("%d, %d, %d, %d, %d, %d", motor_data.data[0], motor_data.data[1], motor_data.data[2], motor_data.data[3], motor_data.data[4], motor_data.data[5]);  
     }
 /*
     void Joy_Simple_Operator::convert_joy2twist(){
@@ -148,26 +144,26 @@ namespace aqua{
         mode_command_pub.publish(mode_command);
     }
     
-    void Joy_Simple_Operator::zeromize(std::vector<int>* dat_ptr, int num){
-        if (dat_ptr == nullptr) {
-            ROS_ERROR("Null Pointer :zeromize");
-            return;
-        }
+    void Joy_Simple_Operator::zeromize(std::vector<int>& dat, int num){
+        //if (dat_ptr == nullptr) {
+        //    ROS_ERROR("Null Pointer :zeromize");
+        //    return;
+        //}
         for (int i=0; i<num; i++){
-            (*dat_ptr)[i] = 0;
+            dat[i] = 0;
         }
     }
 
-    int Joy_Simple_Operator::maxAbs(std::vector<int>* dat_ptr, int num){
-        if (dat_ptr == nullptr) {
-            ROS_ERROR("Null Pointer :maxAbs");
-            return 1;
-        }
+    int Joy_Simple_Operator::maxAbs(std::vector<int>& dat, int num){
+        //if (dat_ptr == nullptr) {
+        //    ROS_ERROR("Null Pointer :maxAbs");
+        //    return 1;
+        //}
         int itr=0; int _max=1;
         for (int i=0; i<num; i++) {
-            if(_max<(*dat_ptr)[i]) {
+            if(_max<abs(dat[i])) {
                 itr = i;
-                _max=(*dat_ptr)[i];
+                _max=abs(dat[i]);
             }
         }
         return _max;
