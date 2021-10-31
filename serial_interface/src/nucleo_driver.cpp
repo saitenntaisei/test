@@ -144,7 +144,7 @@ namespace kurione {
 
     void NucleoDriver::updateInfo(const std_msgs::Int8MultiArray::ConstPtr& info_ptr) { // topic受信
         int num = info_ptr->data.size();
-        if (num!=MOTOR_NUM+2){
+        if (num!=MOTOR_NUM){
             ROS_ERROR("mismatch the input size = %d", num);
         }
         for(int i=0; i<num; i++){
