@@ -51,8 +51,7 @@ int main(int argc, char* argv[]) {
             nucleo.communication_ptr->encode();
             nucleo.communication_ptr->sendDat();
         }
-        //nucleo.sendPacket();
-        //nucleo.publishData();
+        nucleo.publishRobotInfo();
         ros::spinOnce();
         loop_rate.sleep();
         
@@ -68,7 +67,8 @@ namespace kurione {
 
         info_sub_ = nh_.subscribe<std_msgs::Int8MultiArray>("/command/motor_power", 100, &NucleoDriver::updateInfo, this);
         command_sub_ = nh_.subscribe<kurione_msgs::ModeCommand>("/command/mode", 100, &NucleoDriver::updateModeCommand, this);
-        info_pub_ = nh_.advertise<std_msgs::Int8MultiArray>("/serial_data/from_maindriver", 100);
+        //info_pub_ = nh_.advertise<std_msgs::Int8MultiArray>("/serial_data/from_maindriver", 100);
+        roboinfo_pub_ = nh_.advertise<kurione_msgs::RobotInfo>("/robot_info", 100);
 
         std::string port_name_;
         port_name_.empty();
@@ -102,6 +102,9 @@ namespace kurione {
                     communication_ptr->receive_num_dat.pop();
                     // pc.printf("BATT:%2.1f V,%2.1f A, POWER:%2d\n", (float)(voltage_int)/10.0f, (float)(current_int)/10.0f, power_supply);
                     ROS_INFO("BATT:%2.1f V,%2.1f A, POWER:%2d\n", (float)(voltage_int)/10.0f, (float)(current_int)/10.0f, power_supply);
+                    robot_info.batt_voltage = (float)(voltage_int)/10.0f;
+                    robot_info.batt_current = (float)(current_int)/10.0f;
+                    robot_info.power = power_supply;
                     break;
                 default:
                     break;
@@ -179,12 +182,12 @@ namespace kurione {
         return;
     }
 
-    void NucleoDriver::publishData() {
+    void NucleoDriver::publishRobotInfo() {
         
-        receive_data.data[0] = r_packet_[0];
-        receive_data.data[1] = r_packet_[1];
+        //receive_data.data[0] = r_packet_[0];
+        //receive_data.data[1] = r_packet_[1];
 
-        info_pub_.publish(receive_data);
+        roboinfo_pub_.publish(robot_info);
         return;
 
     }
