@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
             nucleo.communication_ptr->encode();
             nucleo.communication_ptr->sendDat();
         }
+        nucleo.publishRobotInfo();
         ros::spinOnce();
         loop_rate.sleep();
         
