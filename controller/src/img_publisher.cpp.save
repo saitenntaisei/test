@@ -14,26 +14,19 @@ int main(int argc, char **argv){
 
     int camera_id = 0;
     double fps = 5.0;
-    double width = 32.0;
-    double height = 32.0;
+    double width = 640.0;
+    double height = 480.0;
 
     cv::VideoCapture camera(camera_id);
-//    bool ret = camera.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('H','2','6','4'));
-//    if(!ret){
-//        ROS_ERROR("codec setting missed");
-//    }else{
-//	ROS_INFO("codec setting succeed!");
-//    }
-
     if(!camera.isOpened()){
         ROS_ERROR("failed to open camera : %d", camera_id);
         return -1;
     }
     if (!camera.set(cv::CAP_PROP_FPS, fps)){
         ROS_ERROR("camera set fps error");
-        return -1;
+camera.set(cv::CAP_PROP_FRAME_WIDT        return -1;
     }
-    ROS_INFO("width : %d, height : %d", (int)camera.get(cv::CAP_PROP_FRAME_WIDTH), (int)camera.get(cv::CAP_PROP_FRAME_HEIGHT));
+    ROS_INFO("standard setting width : %d, height : %d", );
     
     if (!camera.set(cv::CAP_PROP_FRAME_WIDTH, width)){
         ROS_ERROR("camera set width error");
