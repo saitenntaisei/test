@@ -6,17 +6,27 @@
 #include<opencv2/highgui.hpp>
 
 namespace{
-    cv::Mat img;
+    cv::Mat img1, img2;
 }
 
-void imageCallback(const sensor_msgs::ImageConstPtr& msg){
+void imageCallback1(const sensor_msgs::ImageConstPtr& msg){
     try{
-        img = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image;
+        img1 = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image;
     }
     catch(cv_bridge::Exception& e){
         ROS_ERROR("cv_bridge exception: %s",e.what());
     }
-    cv::imshow("image",img);
+    cv::imshow("image_1",img1);
+    cv::waitKey(1);
+}
+void imageCallback2(const sensor_msgs::ImageConstPtr& msg){
+    try{
+        img2 = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8)->image;
+    }
+    catch(cv_bridge::Exception& e){
+        ROS_ERROR("cv_bridge exception: %s",e.what());
+    }
+    cv::imshow("image_2",img2);
     cv::waitKey(1);
 }
 
@@ -26,7 +36,8 @@ int main(int argc, char **argv){
     ros::NodeHandle nh;
 
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber image_sub = it.subscribe("/image",3,imageCallback);
+    image_transport::Subscriber image_sub_1 = it.subscribe("/image_1_raw",3,imageCallback1);
+    image_transport::Subscriber image_sub_2 = it.subscribe("/image_2_raw",3,imageCallback2);
     ros::spin();
     return 0;
 }
