@@ -16,8 +16,8 @@ int main(int argc, char **argv){
     int camera_1_id = 0;
     int camera_2_id = 2;
     double fps = 15.0;
-    double width = 32.0;
-    double height = 32.0;
+    double width = 640.0;
+    double height = 480.0;
 
     cv::VideoCapture camera_1(camera_1_id);
     cv::VideoCapture camera_2(camera_2_id);

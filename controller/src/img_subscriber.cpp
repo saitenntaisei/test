@@ -36,8 +36,8 @@ int main(int argc, char **argv){
     ros::NodeHandle nh;
 
     image_transport::ImageTransport it(nh);
-    image_transport::Subscriber image_sub_1 = it.subscribe("/image_1_raw",3,imageCallback1);
-    image_transport::Subscriber image_sub_2 = it.subscribe("/image_2_raw",3,imageCallback2);
+    image_transport::Subscriber image_sub_1 = it.subscribe("/image_1_exp",3,imageCallback1);
+    image_transport::Subscriber image_sub_2 = it.subscribe("/image_2_exp",3,imageCallback2);
     ros::spin();
     return 0;
 }
