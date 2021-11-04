@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
                 nucleo.communication_ptr->send_command_dat = kurione::Command::SIGNAL_LAND_TO_MAIN;  // 入力命令
                 for(int i=0; i<nucleo.MOTOR_NUM; i++){
                     nucleo.communication_ptr->send_num_dat.push(nucleo.u[i]);
+                    nucleo.robot_info.mpowers[i] = nucleo.u[i];
                 }
                 ROS_INFO("power : %d, u : %d,%d,%d,%d,%d,%d",!nucleo.mode_command.is_power_off_mode, nucleo.u[0],nucleo.u[1],nucleo.u[2],nucleo.u[3],nucleo.u[4],nucleo.u[5]);
             }else{
@@ -128,15 +129,15 @@ namespace kurione {
         motors_ptr[2].setSign(1);
         /**** Servo *****/
         // migimae
-        motors_ptr[3].setInputConfigs(0,1500);  // mid, range
+        motors_ptr[3].setInputConfigs(0,100);  // mid, range
         motors_ptr[3].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[3].setSign(1);
         // hidarimae
-        motors_ptr[4].setInputConfigs(0,1500);  // mid, range
+        motors_ptr[4].setInputConfigs(0,100);  // mid, range
         motors_ptr[4].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[4].setSign(-1);
         // ushiro
-        motors_ptr[5].setInputConfigs(0,1500);  // mid, range
+        motors_ptr[5].setInputConfigs(0,100);  // mid, range
         motors_ptr[5].setDutyConfigs(1500,950,100);   // mid, range, init
         motors_ptr[5].setSign(1);
 
