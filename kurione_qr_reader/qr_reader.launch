@@ -1,0 +1,14 @@
+<launch>
+    <!--
+    <node pkg="controller" name="img_publisher" type="img_publisher"/>
+    -->
+    <!--
+    <node name="image_republish" pkg="image_transport" type="republish" args="compressed raw">
+      <remap from="in" to="/image" />
+      <remap from="out" to="/image_exp" />
+    </node>
+    -->
+    <node pkg="kurione_qr_reader" type="qr_reader.py" name="qr_reader" output="screen">
+        <param name="topics" value="/image"/>
+    </node>
+</launch>
