@@ -5,15 +5,15 @@
     
     <node name="image_republish_1" pkg="image_transport" type="republish" args="compressed raw">
       <remap from="in" to="/image_1_raw" />
-      <remap from="out" to="/image_1" />
+      <remap from="out" to="/image_1_exp" />
     </node>
     
     <node name="image_republish_2" pkg="image_transport" type="republish" args="compressed raw">
       <remap from="in" to="/image_2_raw" />
-      <remap from="out" to="/image_2" />
+      <remap from="out" to="/image_2_exp" />
     </node>
 
     <node pkg="kurione_qr_reader" type="qr_reader.py" name="qr_reader" output="screen">
-        <param name="topics" value="/image_1,/image_2"/>
+        <param name="topics" value="/image_1_exp,/image_2_exp"/>
     </node>
 </launch>
