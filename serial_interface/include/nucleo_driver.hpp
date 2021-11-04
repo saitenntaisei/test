@@ -4,6 +4,7 @@
 #include "communication.hpp"
 #include "packet.hpp"
 #include <kurione_msgs/ModeCommand.h>
+#include <kurione_msgs/RobotInfo.h>
 
 namespace kurione {
 
@@ -58,7 +59,8 @@ namespace kurione {
             ros::Subscriber info_sub_;
             ros::Subscriber command_sub_;
             // Subscribers
-            ros::Publisher info_pub_;
+            //ros::Publisher info_pub_;
+            ros::Publisher roboinfo_pub_;
             // Publishers
             struct PacketMainDriverData data_;
 
@@ -73,10 +75,11 @@ namespace kurione {
             NucleoDriver(Communication*, Motor*);
             ~NucleoDriver();
             kurione_msgs::ModeCommand mode_command;
+            kurione_msgs::RobotInfo robot_info;
 
             void updateInfo(const std_msgs::Int8MultiArray::ConstPtr&);
             void updateModeCommand(const kurione_msgs::ModeCommand::ConstPtr&);
-            void publishData();
+            void publishRobotInfo();
             void calcMotorsDuty();
             void updateCommunication(void);
             void initMotors();
