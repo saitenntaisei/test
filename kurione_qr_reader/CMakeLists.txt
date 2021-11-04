@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(controller)
+project(kurione_qr_reader)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,18 +8,19 @@ project(controller)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  image_transport
-  roscpp
-  cv_bridge
-  sensor_msgs
-  kurione_msgs
+  jsk_rviz_plugins
+  rospy
+  #rtr_msgs
+)
+
+catkin_package(
+  CATKIN_DEPENDS
+    #rtr_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-# find_package(OpenCV REQUIRED)
-find_package(OpenCV 4.3.0 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system thread)
+
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -74,7 +75,7 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs
+#   std_msgs  # Or other packages containing msgs
 # )
 
 ################################################
@@ -107,10 +108,10 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES controller
-  CATKIN_DEPENDS image_transport roscpp cv_bridge sensor_msgs std_msgs
-  DEPENDS OpenCV
+#  INCLUDE_DIRS include
+#  LIBRARIES rtr_qr_reader
+#  CATKIN_DEPENDS jsk_rviz_plugins rospy
+#  DEPENDS system_lib
 )
 
 ###########
@@ -120,14 +121,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+# include
   ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/controller.cpp
+#   src/${PROJECT_NAME}/rtr_qr_reader.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -138,11 +138,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/controller_node.cpp)
-add_executable(img_publisher src/img_publisher.cpp)
-add_executable(img_subscriber src/img_subscriber.cpp)
-add_executable(signal_publisher src/signal_publisher.cpp)
-add_executable(signal_subscriber src/signal_subscriber.cpp)
+# add_executable(${PROJECT_NAME}_node src/rtr_qr_reader_node.cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -157,12 +154,6 @@ add_executable(signal_subscriber src/signal_subscriber.cpp)
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
-
-target_link_libraries(img_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(img_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(signal_publisher ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 #############
 ## Install ##
@@ -211,7 +202,7 @@ target_link_libraries(signal_subscriber ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_controller.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_rtr_qr_reader.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
