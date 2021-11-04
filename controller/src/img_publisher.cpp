@@ -21,14 +21,20 @@ int main(int argc, char **argv){
 
     cv::VideoCapture camera_1(camera_1_id);
     cv::VideoCapture camera_2(camera_2_id);
-/*
-    bool ret = camera_1.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('H','2','6','4'));
+
+    bool ret = camera_1.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
     if(!ret){
-        ROS_ERROR("codec setting missed");
+        ROS_ERROR("camera1: codec setting missed");
     }else{
-	ROS_INFO("codec setting succeed!");
+	ROS_INFO("camera1: codec setting succeed!");
     }
-*/
+    bool ret = camera_2.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
+    if(!ret){
+        ROS_ERROR("camera2: codec setting missed");
+    }else{
+	ROS_INFO("camera2: codec setting succeed!");
+    }
+
     if(!camera_1.isOpened()){
         ROS_ERROR("failed to open camera1 : %d", camera_1_id);
         return -1;
