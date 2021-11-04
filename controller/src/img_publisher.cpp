@@ -22,14 +22,14 @@ int main(int argc, char **argv){
     cv::VideoCapture camera_1(camera_1_id);
     cv::VideoCapture camera_2(camera_2_id);
 
-    bool ret = camera_1.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
-    if(!ret){
+    bool ret1 = camera_1.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
+    if(!ret1){
         ROS_ERROR("camera1: codec setting missed");
     }else{
 	ROS_INFO("camera1: codec setting succeed!");
     }
-    bool ret = camera_2.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
-    if(!ret){
+    bool ret2 = camera_2.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc('M','J','P','G'));
+    if(!ret2){
         ROS_ERROR("camera2: codec setting missed");
     }else{
 	ROS_INFO("camera2: codec setting succeed!");
