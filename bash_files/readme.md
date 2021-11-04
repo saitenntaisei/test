@@ -19,19 +19,19 @@ source ~/catkin_kurione_ws/src/2021_Clione/bash_files/remote_setup.sh
 11. PCにて画像出力を確認する．かくつく場合は手順3に戻る．
 12. ラズパイからディスプレイ，マウスを取り外し，機械班は封入を開始する．
 13. PCにて新たにタブを立ち上げ，
-``
+```
 source ~/catkin_kurione_ws/src/2021_Clione/bash_files/remote_setup.sh
 rostopic echo /robot_info
 ```
 を実行する．
 14. PCにて新たにタブを立ち上げ，
-``
+```
 source ~/catkin_kurione_ws/src/2021_Clione/bash_files/remote_setup.sh
 roslaunch kurione_qr_reader/qr_reader/launch
 ```
 を実行する．
 15. PCにて新たにタブを立ち上げ，
-``
+```
 source ~/catkin_kurione_ws/src/2021_Clione/bash_files/remote_setup.sh
 rviz
 ```
