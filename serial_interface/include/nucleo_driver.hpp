@@ -85,7 +85,7 @@ namespace kurione {
             void initMotors();
 
             static const int MOTOR_NUM = 6;    // モータ数
-            static const int WDT_MAX = 5;   // wdtのカウンタ初期値（s）
+            static const int WDT_MAX = 500;   // wdtのカウンタ初期値（s）
             int operation_command;
             int voltage_int;        // バッテリー電圧整数値
             int current_int;        // バッテリー電流整数値

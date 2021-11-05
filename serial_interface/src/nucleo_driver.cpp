@@ -36,6 +36,7 @@ int main(int argc, char* argv[]) {
         nucleo.updateCommunication();
         t++;
         if(t>=100) {
+            t=0;
             nucleo.wdt_count--;
             if (nucleo.wdt_count==0){   // wdr発動
                 nucleo.mode_command.is_motor_init_mode = true;
