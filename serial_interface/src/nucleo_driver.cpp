@@ -36,7 +36,12 @@ int main(int argc, char* argv[]) {
         nucleo.updateCommunication();
         t++;
         if(t>=100) {
-            t = 0;
+            nucleo.wdt_count--;
+            if (nucleo.wdt_count==0){   // wdr発動
+                nucleo.mode_command.is_motor_init_mode = true;
+                nucleo.mode_command.is_power_off_mode = false;
+                ROS_WARN("Watch Dog Timer Wake up. Initialized motor control");
+            }
             if (nucleo.operation_command == 0) {    // 特に大事な命令はない
                 nucleo.calcMotorsDuty();
                 nucleo.communication_ptr->send_command_dat = kurione::Command::SIGNAL_LAND_TO_MAIN;  // 入力命令
@@ -78,7 +83,9 @@ namespace kurione {
         //receive_data.data.resize(2);
         communication_ptr->serial_ptr->initializePort();
         initMotors();
-
+        mode_command.is_motor_init_mode = true; // 初期状態では動かない
+        mode_command.is_power_off_mode = false; // 通電は行う
+        wdt_count = WDT_MAX;    // wdt準備
         operation_command = 0;
 
         communication_ptr->init(Communication::ROLL_LAND);
@@ -158,6 +165,7 @@ namespace kurione {
     }
     
     void NucleoDriver::updateModeCommand(const kurione_msgs::ModeCommand::ConstPtr& command_ptr) {
+        wdt_count = WDT_MAX;    // wdtリセット
         mode_command.is_motor_init_mode = command_ptr->is_motor_init_mode;
         if (mode_command.is_power_off_mode != command_ptr->is_power_off_mode) {
             if (mode_command.is_power_off_mode){
