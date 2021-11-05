@@ -24,16 +24,17 @@ namespace aqua{
         mode_command_pub = nh.advertise<kurione_msgs::ModeCommand>("/command/mode",10);
         mode_command.is_motor_init_mode = true;
         mode_command.is_power_off_mode = false;
-        is_drone_mode = false;
+        //is_drone_mode = false;
+        drone_param = 0.0;
         joy_data.axes.resize(4);
         joy_data.buttons.resize(10);
         motor_data.data.resize(MotorOperation::MOTOR_N);
         _mpower.resize(MotorOperation::MOTOR_N);
 
         surge_linx.setWeights(1.0, 100, 100, 0, 0, 0, 0);
-        sway_liny.setWeights(1.0, -80, 80, -80, 0, 0, 0);
-        heave_linz.setWeights(1.0, 30, -30, 30, 0, 0, 0);
-        pitch_roty.setWeights(1.0, 30, -30, -30, 0, 0, 0);
+        sway_liny.setWeights(0.0, -80, 80, -80, 0, 0, 0);
+        heave_linz.setWeights(0.0, 30, -30, 30, 0, 0, 0);
+        pitch_roty.setWeights(0.0, 30, -30, -30, 0, 0, 0);
         yaw_rotz.setWeights(1.0, 50, -50, -50, 0, 0, 0);
 
         set_form.setWeights(1.0, 0, 0, 0, 100, -100, 100);   
@@ -65,18 +66,32 @@ namespace aqua{
         static int pre_joy7 = 0;
         static int pre_joy0 = 0;
         static int pre_joy1 = 0;
+        static int pre_joy2 = 0;
+        static int pre_joy3 = 0;
         mode_command.is_motor_init_mode = (joy_data.buttons[6]!=1);
         if ((joy_data.buttons[7]==1)&&(pre_joy7==0)) {                          // 押し込まれたら反転
             mode_command.is_power_off_mode =~ mode_command.is_power_off_mode;
         }
-        if ((joy_data.buttons[0]==1)&&(pre_joy0==0)) {
-            is_drone_mode = 1;
+        if ((joy_data.buttons[0]==1)&&(pre_joy0==0)) {  // shikaku
+            //is_drone_mode = 1;
+            drone_param = 1.0;  // completely drone
         }
-        if ((joy_data.buttons[1]==1)&&(pre_joy1==0)) {
-            is_drone_mode = 0;
+        if ((joy_data.buttons[1]==1)&&(pre_joy1==0)) {  // batsu
+            //is_drone_mode = 0;
+            drone_param = 0.0;  // completely omni
+        }
+        if ((joy_data.buttons[2]==1)&&(pre_joy2==0)) {  // ??
+            //is_drone_mode = 0;
+            drone_param = 0.5;  // omni+drone
+        }
+        if ((joy_data.buttons[3]==1)&&(pre_joy3==0)) {  // ??
+            //is_drone_mode = 0;
+            drone_param = -0.5;  // omni-drone
         }
         pre_joy0 = joy_data.buttons[0];
         pre_joy1 = joy_data.buttons[1];
+        pre_joy2 = joy_data.buttons[2];
+        pre_joy3 = joy_data.buttons[3];
         pre_joy7 = joy_data.buttons[7];
     }
 
@@ -96,7 +111,8 @@ namespace aqua{
             pitch_roty.sumPower(_mpower);
             yaw_rotz.calcMotorPowerAnalog(joy_data.axes[2]);
             yaw_rotz.sumPower(_mpower);
-            set_form.calcMotorPowerDigital(is_drone_mode);
+            //set_form.calcMotorPowerDigital(is_drone_mode);
+            set_form.calcMotorPowerAnalog(drone_param);
             set_form.sumPower(_mpower);
             //ROS_INFO("%d, %d, %d, %d, %d, %d", _mpower[0], _mpower[1], _mpower[2], _mpower[3], _mpower[4], _mpower[5]);
             int _max = maxAbs(_mpower, 3); // BLDCの入力で100超えてないか？
