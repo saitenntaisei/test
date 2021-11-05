@@ -100,8 +100,8 @@ namespace aqua{
         ros::NodeHandle nh;
         void joy_callback(const sensor_msgs::Joy::ConstPtr &joy_msg);
         //void joy_callback(const sensor_msgs::Joy& joy_msg);
-        bool is_drone_mode;
-    
+        //bool is_drone_mode;
+        double drone_param;    
     private:
         ros::Subscriber joy_sub;
         ros::Publisher motor_data_pub;
