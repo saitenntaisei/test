@@ -31,11 +31,19 @@ namespace aqua{
         motor_data.data.resize(MotorOperation::MOTOR_N);
         _mpower.resize(MotorOperation::MOTOR_N);
 
+        surge_linx.setWeights(1.0, 0, 100, 0, 0, 0, 0);
+        sway_liny.setWeights(0.0, -80, 80, -80, 0, 0, 0);
+        heave_linz.setWeights(1.0, 0, 0, 30, 0, 0, 0);
+        pitch_roty.setWeights(1.0, 70, 0, 0, 0, 0, 0);
+        yaw_rotz.setWeights(0.0, 50, -50, -50, 0, 0, 0);
+
+        /* 古いの
         surge_linx.setWeights(1.0, 70, 100, 0, 0, 0, 0);
         sway_liny.setWeights(0.0, -80, 80, -80, 0, 0, 0);
         heave_linz.setWeights(0.0, 30, -30, 30, 0, 0, 0);
         pitch_roty.setWeights(0.0, 30, -30, -30, 0, 0, 0);
         yaw_rotz.setWeights(1.0, 50, -50, -50, 0, 0, 0);
+        */
 
         set_form.setWeights(1.0, 0, 0, 0, 100, -100, 100);   
     }
@@ -105,7 +113,8 @@ namespace aqua{
             surge_linx.sumPower(_mpower);
             sway_liny.calcMotorPowerAnalog(joy_data.axes[0]);
             sway_liny.sumPower(_mpower);
-            heave_linz.calcMotorPowerDigital(joy_data.buttons[5]-joy_data.buttons[4]);
+            //heave_linz.calcMotorPowerDigital(joy_data.buttons[5]-joy_data.buttons[4]);
+            heave_linz.calcMotorPowerDigital(joy_data.buttons[5]);
             heave_linz.sumPower(_mpower);
             pitch_roty.calcMotorPowerAnalog(joy_data.axes[3]);
             pitch_roty.sumPower(_mpower);

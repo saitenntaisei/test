@@ -134,7 +134,8 @@ namespace kurione {
         // ushiro
         motors_ptr[2].setInputConfigs(0,100);  // mid, range
         //motors_ptr[2].setDutyConfigs(1480,200,100);   // mid, range, init
-        motors_ptr[2].setDutyConfigs(100,10,100);   // mid, range, init
+        //motors_ptr[2].setDutyConfigs(100,10,100);   // mid, range, init
+        motors_ptr[2].setDutyConfigs(1100,900,1100);   // mid, range, init
         motors_ptr[2].setSign(1);
         /**** Servo *****/
         // migimae
