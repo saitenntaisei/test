@@ -88,8 +88,8 @@ namespace aqua{
         void zeromize(std::vector<int>&, int);
         int maxAbs(std::vector<int>&, int);
         int connection_matrix[6][6]={
+            {0, 1, 0, 0, 0, 0,},
             {1, 0, 0, 0, 0, 0,},
-            {0, -1, 0, 0, 0, 0,},
             {0, 0, 1, 0, 0, 0,},
             {0, 0, 0, 1, 0, 0,},
             {0, 0, 0, 0, -1, 0,},

@@ -31,7 +31,7 @@ namespace aqua{
         motor_data.data.resize(MotorOperation::MOTOR_N);
         _mpower.resize(MotorOperation::MOTOR_N);
 
-        surge_linx.setWeights(1.0, 100, 100, 0, 0, 0, 0);
+        surge_linx.setWeights(1.0, 70, 100, 0, 0, 0, 0);
         sway_liny.setWeights(0.0, -80, 80, -80, 0, 0, 0);
         heave_linz.setWeights(0.0, 30, -30, 30, 0, 0, 0);
         pitch_roty.setWeights(0.0, 30, -30, -30, 0, 0, 0);
@@ -74,7 +74,7 @@ namespace aqua{
         }
         if ((joy_data.buttons[0]==1)&&(pre_joy0==0)) {  // shikaku
             //is_drone_mode = 1;
-            drone_param = 1.0;  // completely drone
+            drone_param = -1.0;  // completely drone
         }
         if ((joy_data.buttons[1]==1)&&(pre_joy1==0)) {  // batsu
             //is_drone_mode = 0;
