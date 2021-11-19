@@ -1,7 +1,7 @@
 # ros周り
-.bag
-.rosbag
-.active
+*.bag
+*.rosbag
+*.active
 
 # コードエディタ用
 .vscode/

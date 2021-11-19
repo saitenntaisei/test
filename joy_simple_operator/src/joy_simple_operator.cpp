@@ -31,10 +31,10 @@ namespace aqua{
         motor_data.data.resize(MotorOperation::MOTOR_N);
         _mpower.resize(MotorOperation::MOTOR_N);
 
-        surge_linx.setWeights(1.0, 0, 100, 0, 0, 0, 0);
+        surge_linx.setWeights(1.0, 0, 90, 0, 0, 0, 0);
         sway_liny.setWeights(0.0, -80, 80, -80, 0, 0, 0);
         heave_linz.setWeights(1.0, 0, 0, 30, 0, 0, 0);
-        pitch_roty.setWeights(1.0, 70, 0, 0, 0, 0, 0);
+        pitch_roty.setWeights(1.0, 63, 0, 0, 0, 0, 0);
         yaw_rotz.setWeights(0.0, 50, -50, -50, 0, 0, 0);
 
         /* 古いの
@@ -45,6 +45,7 @@ namespace aqua{
         yaw_rotz.setWeights(1.0, 50, -50, -50, 0, 0, 0);
         */
 
+        //set_form.setWeights(1.0, 0, 0, 0, 100, -100, 100);
         set_form.setWeights(1.0, 0, 0, 0, 100, -100, 100);   
     }
     

@@ -2,7 +2,7 @@
     <node name="joy_node" pkg="joy" type="joy_node">
         <param name="/dev" value="/dev/input/js0"/>
     </node>
-    <node pkg="controller" name="img_subscriber" type="img_subscriber"/>
+    <!-- <node pkg="controller" name="img_subscriber" type="img_subscriber"/>  -->
     <!-- <node pkg="controller" name="signal_publisher" type="signal_publisher"/> -->
     <node pkg="joy_simple_operator" type="joy_simple_operator" name="joy_simple_operator_node">
     </node>

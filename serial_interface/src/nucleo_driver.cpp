@@ -125,13 +125,13 @@ namespace kurione {
         /**** BLDC ******/
         // migimae
         motors_ptr[0].setInputConfigs(0,100);  // mid, range
-        motors_ptr[0].setDutyConfigs(1480,200,100);   // mid, range, init
+        motors_ptr[0].setDutyConfigs(1480,270,100);   // mid, range, init
         motors_ptr[0].setSign(1);
         // hidarimae
         motors_ptr[1].setInputConfigs(0,100);  // mid, range
-        motors_ptr[1].setDutyConfigs(1480,200,100);   // mid, range, init
+        motors_ptr[1].setDutyConfigs(1480,270,100);   // mid, range, init
         motors_ptr[1].setSign(-1);
-        // ushiro
+        // ushiro//
         motors_ptr[2].setInputConfigs(0,100);  // mid, range
         //motors_ptr[2].setDutyConfigs(1480,200,100);   // mid, range, init
         //motors_ptr[2].setDutyConfigs(100,10,100);   // mid, range, init
@@ -144,7 +144,8 @@ namespace kurione {
         motors_ptr[3].setSign(1);
         // hidarimae
         motors_ptr[4].setInputConfigs(0,100);  // mid, range
-        motors_ptr[4].setDutyConfigs(1500,950,100);   // mid, range, init
+        //motors_ptr[4].setDutyConfigs(1500,950,100);   // mid, range, init
+        motors_ptr[4].setDutyConfigs(100,10,100);   // mid, range, init
         motors_ptr[4].setSign(-1);
         // ushiro
         motors_ptr[5].setInputConfigs(0,100);  // mid, range
