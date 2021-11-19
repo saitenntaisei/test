@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="test_kamiguchi" type="test_kamiguchi" name="test_kamiguchi" output="screen">
+    </node> 
+</launch>
